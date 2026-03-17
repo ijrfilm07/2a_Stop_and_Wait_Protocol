@@ -9,49 +9,53 @@ To write a python program to perform stop and wait protocol
 5. If your frames reach the server it will send ACK signal to client
 6. Stop the Program
 ## PROGRAM
-(server.py)
+## Server.py:
+~~~
 import socket
-
-s = socket.socket()
-s.bind(('localhost', 8000))
-s.listen(1)
-
-print("Waiting for connection...")
-conn, addr = s.accept()
-print("Connected to", addr)
-
+server = socket.socket()
+server.bind(('127.0.0.1',12345))
+server.listen(1)
+print("Server is listening...")
+conn, addr = server.accept()
+print(f"Connected with {addr}")
 while True:
     data = conn.recv(1024).decode()
-    if not data:
-        break
+    if data:
+        print(f"Received: {data}")
+        conn.send("ACK".encode())
+        if data.lower() == 'exit':  
+            print("Connection closed by client")
+            conn.close()
+            break
+~~~
 
-    print("Frame received:", data)
-    conn.send("ACK".encode())
-
-conn.close()
-
-(client.py)
+## Client.py:
+~~~
 import socket
-
-s = socket.socket()
-s.connect(('localhost', 8000))
-
-n = int(input("Enter number of frames: "))
-
-for i in range(n):
-    msg = input("Enter frame: ")
-    s.send(msg.encode())
-
-    ack = s.recv(1024).decode()
-    print("Received:", ack)
-
-s.close()
-
+import time
+client = socket.socket()
+client.connect(('127.0.0.1',12345))
+client.settimeout(5)  
+while True:
+    msg = input("Enter a message (or type 'exit' to quit): ")
+    client.send(msg.encode())  
+    if msg.lower() == 'exit':  
+        print("Connection closed by client")
+        client.close()
+        break
+    try:
+        ack = client.recv(1024).decode()
+        if ack == "ACK":
+            print(f"Server acknowledged: {ack}")
+    except socket.timeout:
+        print("No ACK received, retransmitting...")
+        continue
+~~~
 
 
 ## OUTPUT
-<img width="1860" height="768" alt="image" src="https://github.com/user-attachments/assets/0360010d-878b-427a-bec6-26a798755919" />
-<img width="1860" height="938" alt="image" src="https://github.com/user-attachments/assets/f57d6c33-b5ab-4bb5-b064-12ce5dbf131d" />
+<img width="1043" height="227" alt="image" src="https://github.com/user-attachments/assets/9a0a3b31-c7c6-4dae-a067-b1808a072eae" />
+
 
 
 ## RESULT
