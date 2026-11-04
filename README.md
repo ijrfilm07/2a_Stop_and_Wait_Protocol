@@ -54,7 +54,8 @@ while True:
 
 
 ## OUTPUT
-<img width="1043" height="227" alt="image" src="https://github.com/user-attachments/assets/9a0a3b31-c7c6-4dae-a067-b1808a072eae" />
+<img width="1917" height="1023" alt="Screenshot 2026-11-03 133831" src="https://github.com/user-attachments/assets/167a8048-d7d2-4d62-a6b2-c990aad6e52f" />
+
 
 
 
